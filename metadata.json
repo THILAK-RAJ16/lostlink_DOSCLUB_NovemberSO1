@@ -1,0 +1,6 @@
+{
+  "name": "LostLink – Smart Lost & Found Platform",
+  "description": "Connect with rightful owners, report lost and found belongings, and discover high-confidence matches with smart verification.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>LostLink</title></head>
+<body style="font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0;color:#334155">
+<p>Redirecting… <a href="{{ target }}">Continue</a></p>
+<script>
+  try {
+    {% if token %}
+    localStorage.setItem('lostlink_auth_token', {{ token|tojson }});
+    localStorage.setItem('lostlink_auth_user', JSON.stringify({{ user|tojson }}));
+    {% else %}
+    localStorage.removeItem('lostlink_auth_token');
+    localStorage.removeItem('lostlink_auth_user');
+    {% endif %}
+  } catch (e) {}
+  location.replace({{ target|tojson }});
+</script>
+</body></html>

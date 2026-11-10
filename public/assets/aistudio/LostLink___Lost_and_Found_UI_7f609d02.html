@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LostLink – Lost something? Let’s find it.</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--pri:#2563EB;--sec:#0F172A;--bg:#F8FAFC;--acc:#14B8A6;--tx:#334155;--card:#fff;--line:#E2E8F0;--mute:#64748B;--warn:#F59E0B;--bad:#DC2626;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--pri:#60A5FA;--sec:#F1F5F9;--bg:#0B1220;--tx:#CBD5E1;--card:#111A2E;--line:#22304A;--mute:#94A3B8}}
+:root[data-theme="dark"]{color-scheme:dark;--pri:#60A5FA;--sec:#F1F5F9;--bg:#0B1220;--tx:#CBD5E1;--card:#111A2E;--line:#22304A;--mute:#94A3B8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.55 Manrope,system-ui,sans-serif}
+h1,h2,h3{color:var(--sec);margin:0;line-height:1.15;letter-spacing:-.02em}
+a{color:var(--pri);text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:30}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:1px solid var(--line)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+.nav{display:flex;align-items:center;gap:8px;height:64px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;color:var(--sec)}
+.logo i{width:30px;height:30px;border-radius:9px;background:var(--pri);display:grid;place-items:center;color:#fff;font-style:normal;font-size:16px}
+.links{display:flex;gap:2px;margin-left:auto;align-items:center}
+.links a,.links button{padding:8px 12px;border-radius:10px;color:var(--tx);font-weight:500;background:none;border:0;cursor:pointer}
+.links a:hover,.links button:hover,.links a.on{background:var(--bg);color:var(--sec)}
+#burger{display:none;margin-left:auto;background:none;border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer}
+@media(max-width:760px){#burger{display:block}.links{display:none;position:absolute;top:64px;left:0;right:0;background:var(--card);flex-direction:column;align-items:stretch;padding:10px 20px;border-bottom:1px solid var(--line)}.links.open{display:flex}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;border:1px solid transparent;font-weight:700;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px)}
+.p{background:var(--pri);color:#fff}.p:hover{background:#1D4ED8}
+.a{background:var(--acc);color:#04201C}
+.o{background:var(--card);border-color:var(--line);color:var(--sec)}
+.s{padding:7px 12px;font-size:14px;border-radius:10px}
+.d{background:none;color:var(--bad);border-color:var(--line)}
+.hero{padding:64px 0 40px;background:linear-gradient(180deg,var(--card),var(--bg))}
+.hero h1{font-size:clamp(34px,6vw,60px);max-width:14ch}
+.hero p{max-width:52ch;color:var(--mute);font-size:18px}
+.sbar{display:flex;gap:8px;margin:24px 0;max-width:620px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+.sbar input{flex:1;border:0;background:none;padding:10px 12px;min-width:0}
+.sbar input:focus{outline:none}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+section{padding:36px 0}
+.row{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.05);transition:transform .2s,box-shadow .2s;cursor:pointer}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,42,.12)}
+.ph{height:130px;display:grid;place-items:center;font-size:48px}
+.lost .ph{background:#DBEAFE}.found .ph{background:#CCFBF1}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .lost .ph{background:#1E3A8A}:root:not([data-theme="light"]) .found .ph{background:#134E4A}}
+.cb{padding:14px 16px}.cb h3{font-size:17px;margin:6px 0 4px}
+.meta{color:var(--mute);font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px}
+.t-lost{background:#DBEAFE;color:#1E40AF}.t-found{background:#CCFBF1;color:#0F766E}
+.st-OPEN{background:#E2E8F0;color:#334155}.st-CLAIM_PENDING{background:#FEF3C7;color:#92400E}.st-MATCHED{background:#EDE9FE;color:#5B21B6}.st-RETURNED{background:#DCFCE7;color:#166534}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.step b{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--sec);color:var(--bg);margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;background:var(--sec);color:var(--bg);border-radius:20px;padding:26px}
+.stats div{text-align:center}.stats strong{display:block;font-size:clamp(28px,5vw,44px);line-height:1;color:#5EEAD4}.stats span{font-size:14px;opacity:.8}
+footer{background:var(--sec);color:#CBD5E1;padding:36px 0;margin-top:40px;font-size:14px}
+footer .wrap{display:flex;gap:30px;flex-wrap:wrap;justify-content:space-between}footer a{color:#CBD5E1;display:block}footer h3{color:#fff;font-size:15px;margin-bottom:8px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+label{display:block;font-weight:700;font-size:14px;color:var(--sec);margin-bottom:4px}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.f{margin-bottom:14px}.f small{color:var(--bad);display:none;margin-top:3px}.f.bad small{display:block}.f.bad input,.f.bad select,.f.bad textarea{border-color:var(--bad)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:600px){.two{grid-template-columns:1fr}}
+.narrow{max-width:680px;margin:0 auto}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;padding:10px 14px;font-weight:700;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--pri);border-color:var(--pri)}
+.li{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}.li:last-child{border:0}
+.sc{font-weight:800;color:var(--acc)}
+.bar{height:6px;border-radius:9px;background:var(--line);width:110px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc)}
+.empty{text-align:center;padding:44px 16px;color:var(--mute)}.empty h3{margin-bottom:6px}
+.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.pg{display:flex;gap:6px;justify-content:center;margin-top:22px}.pg button{min-width:38px}
+#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;z-index:60}
+.toast{background:var(--sec);color:var(--bg);padding:12px 16px;border-radius:12px;border-left:5px solid var(--acc);box-shadow:0 10px 30px rgba(0,0,0,.25)}.toast.err{border-color:var(--bad)}
+dialog{border:0;border-radius:20px;padding:0;max-width:520px;width:calc(100% - 32px);background:var(--card);color:var(--tx)}
+dialog::backdrop{background:rgba(15,23,42,.55)}
+.dl{padding:24px}.skel{height:210px;border-radius:16px;background:linear-gradient(90deg,var(--line),var(--card),var(--line));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="logo" href="#home"><i>⌕</i>LostLink</a>
+<button id="burger" aria-label="Menu" onclick="document.getElementById('lk').classList.toggle('open')">☰</button>
+<nav class="links" id="lk"></nav>
+</div></header>
+<main id="app"></main>
+<footer><div class="wrap">
+<div><div class="logo" style="color:#fff">LostLink</div><p>Reuniting people with their belongings.</p></div>
+<div><h3>Explore</h3><a href="#browse">Browse items</a><a href="#report-lost">Report lost</a><a href="#report-found">Report found</a></div>
+<div><h3>Contact</h3><a href="mailto:help@lostlink.example">help@lostlink.example</a><span>+91 44 0000 0000</span></div>
+</div></footer>
+<div id="toasts" aria-live="polite"></div>
+<dialog id="dlg"></dialog>
+<script>
+const CATS=['Electronics','Documents','Bags','Clothing','Accessories','Books','Keys','Other'];
+const ICON={Electronics:'📱',Documents:'📄',Bags:'🎒',Clothing:'🧥',Accessories:'⌚',Books:'📚',Keys:'🔑',Other:'📦'};
+let S={user:null,items:[
+{id:1,type:'LOST',name:'Black Dell laptop bag',cat:'Bags',desc:'Black laptop bag with a red zipper and a sticker on the front.',loc:'Chennai Central Station',date:'2026-11-06',status:'OPEN',owner:'Asha',hide:'Serial sticker: ‘Fix-It’'},
+{id:2,type:'FOUND',name:'Black backpack',cat:'Bags',desc:'Black bag found near platform 4, has a red zip.',loc:'Chennai Central Station',date:'2026-11-07',status:'OPEN',owner:'Ravi',hide:'Contains a Dell charger'},
+{id:3,type:'LOST',name:'Car keys with blue tag',cat:'Keys',desc:'Toyota key with blue leather tag.',loc:'Sriperumbudur bus stand',date:'2026-11-08',status:'OPEN',owner:'Meena',hide:''},
+{id:4,type:'FOUND',name:'Aadhaar card holder',cat:'Documents',desc:'Brown card holder with ID cards.',loc:'Guindy Metro',date:'2026-11-05',status:'CLAIM_PENDING',owner:'Karthik',hide:'Name on card starts with S'},
+{id:5,type:'LOST',name:'iPhone 13 blue',cat:'Electronics',desc:'Blue phone with cracked back glass.',loc:'T Nagar',date:'2026-11-02',status:'OPEN',owner:'Asha',hide:'Lock screen: dog photo'},
+{id:6,type:'FOUND',name:'Silver wrist watch',cat:'Accessories',desc:'Silver analog watch, leather strap.',loc:'Marina Beach',date:'2026-11-04',status:'RETURNED',owner:'Ravi',hide:''},
+{id:7,type:'FOUND',name:'Blue umbrella',cat:'Other',desc:'Large blue umbrella left in a cafe.',loc:'Anna Nagar',date:'2026-11-09',status:'OPEN',owner:'Karthik',hide:''},
+{id:8,type:'LOST',name:'Physics textbook',cat:'Books',desc:'Class 12 NCERT physics with notes inside.',loc:'Tambaram',date:'2026-11-03',status:'OPEN',owner:'Meena',hide:''}],
+claims:[{id:1,item:4,by:'Priya',proof:'Name starts with S and there is a metro pass inside.',status:'PENDING'}],nid:9,q:'',pg:1,tab:'lost',atab:'users'};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m,e){const t=document.createElement('div');t.className='toast'+(e?' err':'');t.textContent=m;$('#toasts').append(t);setTimeout(()=>t.remove(),3200)}
+const toks=s=>new Set(String(s).toLowerCase().match(/[a-z0-9]+/g)||[]);
+const jac=(a,b)=>{a=toks(a);b=toks(b);if(!a.size||!b.size)return 0;let i=0;a.forEach(x=>b.has(x)&&i++);return i/(a.size+b.size-i)};
+function score(l,f){const d=Math.abs(new Date(l.date)-new Date(f.date))/864e5;return Math.round((l.cat===f.cat?25:0)+jac(l.name,f.name)*30+jac(l.desc,f.desc)*20+jac(l.loc,f.loc)*15+Math.max(0,1-d/14)*10)}
+function matches(){const r=[];S.items.filter(i=>i.type==='LOST'&&i.status==='OPEN').forEach(l=>S.items.filter(i=>i.type==='FOUND'&&i.status==='OPEN').forEach(f=>{const s=score(l,f);if(s>=45)r.push({l,f,s})}));return r.sort((a,b)=>b.s-a.s)}
+function nav(){const u=S.user,r=location.hash.slice(1)||'home';const a=(h,t)=>`<a href="#${h}" class="${r===h?'on':''}" onclick="document.getElementById('lk').classList.remove('open')">${t}</a>`;
+$('#lk').innerHTML=a('browse','Browse')+a('report-lost','Report lost')+a('report-found','Report found')+(u?a('dashboard','Dashboard')+(u.admin?a('admin','Admin'):'')+`<button onclick="logout()">Log out</button>`:a('login','Log in')+`<a class="btn p s" href="#register">Sign up</a>`)+`<button aria-label="Toggle theme" onclick="theme()">◐</button>`}
+function theme(){const r=document.documentElement,d=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'light':'dark'}
+function card(i){const pub=i.type==='FOUND'?'Identifying details hidden until claimed':esc(i.desc);return `<article class="card ${i.type.toLowerCase()}" tabindex="0" onclick="openItem(${i.id})" onkeydown="if(event.key==='Enter')openItem(${i.id})"><div class="ph" aria-hidden="true">${ICON[i.cat]}</div><div class="cb"><span class="tag t-${i.type.toLowerCase()}">${i.type}</span> <span class="tag st-${i.status}">${i.status.replace('_',' ')}</span><h3>${esc(i.name)}</h3><div class="meta">📍 ${esc(i.loc)}<br>🗓 ${i.date}</div></div></article>`}
+const empty=(t,d,l)=>`<div class="empty"><div style="font-size:40px">🔍</div><h3>${t}</h3><p>${d}</p>${l||''}</div>`;
+function home(){const c=t=>S.items.filter(i=>i.type===t).length,rec=S.items.filter(i=>i.status==='RETURNED').length;const L=S.items.filter(i=>i.type==='LOST').slice(-4).reverse(),F=S.items.filter(i=>i.type==='FOUND').slice(-4).reverse();
+return `<div class="hero"><div class="wrap"><h1>Lost Something? Let’s Find It.</h1><p>Report what you lost, list what you found, and let LostLink suggest the likeliest matches for you to confirm.</p>
+<form class="sbar" onsubmit="event.preventDefault();S.q=this.q.value;S.pg=1;location.hash='browse'"><input name="q" placeholder="Search by item name, e.g. black backpack" aria-label="Search items"><button class="btn p">Search</button></form>
+<div class="cta"><a class="btn p" href="#report-lost">Report Lost Item</a><a class="btn a" href="#report-found">Report Found Item</a></div></div></div>
+<div class="wrap"><section><div class="row"><h2>Recently lost</h2><a href="#browse">View all</a></div><div class="grid">${L.map(card).join('')}</div></section>
+<section><div class="row"><h2>Recently found</h2><a href="#browse">View all</a></div><div class="grid">${F.map(card).join('')}</div></section>
+<section><h2 style="margin-bottom:18px">How it works</h2><div class="steps"><div class="step"><b>1</b><h3>Report</h3><p class="meta">Describe the item you lost or found, with a photo.</p></div><div class="step"><b>2</b><h3>Review matches</h3><p class="meta">We compare category, name, place and date, and score each pair.</p></div><div class="step"><b>3</b><h3>Claim</h3><p class="meta">Owners describe private details; the finder approves or rejects.</p></div><div class="step"><b>4</b><h3>Recover</h3><p class="meta">Arrange the handover and mark the item returned.</p></div></div></section>
+<section><div class="stats"><div><strong>${c('LOST')}</strong><span>Lost reports</span></div><div><strong>${c('FOUND')}</strong><span>Found reports</span></div><div><strong>${rec}</strong><span>Returned</span></div></div></section></div>`}
+function browse(){const f=S.f||{};let L=S.items.filter(i=>(!S.q||i.name.toLowerCase().includes(S.q.toLowerCase()))&&(!f.cat||i.cat===f.cat)&&(!f.loc||i.loc.toLowerCase().includes(f.loc.toLowerCase()))&&(!f.date||i.date>=f.date)&&(!f.type||i.type===f.type));
+L.sort((a,b)=>f.sort==='old'?a.date.localeCompare(b.date):b.date.localeCompare(a.date));const per=6,pages=Math.max(1,Math.ceil(L.length/per));S.pg=Math.min(S.pg,pages);const v=L.slice((S.pg-1)*per,S.pg*per);
+return `<div class="wrap"><section><h2 style="margin-bottom:16px">Browse items</h2><div class="filters">
+<div><label>Search</label><input value="${esc(S.q)}" oninput="S.q=this.value;S.pg=1;redraw('#res')" placeholder="Item name"></div>
+<div><label>Category</label><select onchange="setF('cat',this.value)"><option value="">All</option>${CATS.map(c=>`<option ${f.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+<div><label>Location</label><input value="${esc(f.loc||'')}" oninput="setF('loc',this.value)" placeholder="Any place"></div>
+<div><label>Since</label><input type="date" value="${f.date||''}" onchange="setF('date',this.value)"></div>
+<div><label>Status</label><select onchange="setF('type',this.value)"><option value="">Lost and found</option><option value="LOST" ${f.type==='LOST'?'selected':''}>Lost</option><option value="FOUND" ${f.type==='FOUND'?'selected':''}>Found</option></select></div>
+<div><label>Sort</label><select onchange="setF('sort',this.value)"><option value="new">Newest</option><option value="old" ${f.sort==='old'?'selected':''}>Oldest</option></select></div></div>
+<div id="res">${res(v,pages)}</div></section></div>`}
+function res(v,pages){return v.length?`<div class="grid">${v.map(card).join('')}</div><div class="pg">${Array.from({length:pages},(_,i)=>`<button class="btn ${i+1===S.pg?'p':'o'} s" onclick="S.pg=${i+1};render()">${i+1}</button>`).join('')}</div>`:empty('No items match','Try fewer filters, or report the item yourself.','<a class="btn p" href="#report-lost">Report lost item</a>')}
+function setF(k,v){S.f={...(S.f||{}),[k]:v};S.pg=1;render()}
+function redraw(){const y=scrollY;const i=document.activeElement;render();const n=[...document.querySelectorAll('.filters input')][0];if(n&&i&&i.placeholder==='Item name'){n.focus();n.setSelectionRange(n.value.length,n.value.length)}scrollTo(0,y)}
+function report(t){if(!S.user)return gate();const lost=t==='LOST';return `<div class="wrap"><section class="narrow"><h2>${lost?'Report a lost item':'Report a found item'}</h2><p class="meta">${lost?'The more detail you add, the better the matches.':'Keep private identifying details here; they stay hidden from the public listing.'}</p>
+<form class="panel" id="rf" novalidate onsubmit="submitItem(event,'${t}')">
+<div class="f"><label>Item name</label><input name="name" required maxlength="80"><small>Enter the item name.</small></div>
+<div class="two"><div class="f"><label>Category</label><select name="cat" required><option value="">Choose…</option>${CATS.map(c=>`<option>${c}</option>`).join('')}</select><small>Choose a category.</small></div>
+<div class="f"><label>${lost?'Lost':'Found'} date</label><input type="date" name="date" required max="2026-11-10"><small>Pick a date that is not in the future.</small></div></div>
+<div class="f"><label>${lost?'Lost':'Found'} location</label><input name="loc" required><small>Enter where it happened.</small></div>
+<div class="f"><label>Description</label><textarea name="desc" rows="3" required minlength="10"></textarea><small>Write at least 10 characters.</small></div>
+<div class="f"><label>${lost?'Identifying features':'Additional identifying information (private)'}</label><textarea name="hide" rows="2"></textarea></div>
+${lost?`<div class="f"><label>Contact information</label><input name="contact" value="${esc(S.user.phone)}"></div>`:''}
+<div class="f"><label>Photo (JPG, PNG or WebP, up to 5 MB)</label><input type="file" name="img" accept="image/jpeg,image/png,image/webp" onchange="chk(this)"><small>Upload a JPG, PNG or WebP under 5 MB.</small></div>
+<button class="btn ${lost?'p':'a'}">Submit report</button></form></section></div>`}
+function chk(i){const f=i.files[0],ok=!f||(/^image\/(jpeg|png|webp)$/.test(f.type)&&f.size<=5242880);i.parentElement.classList.toggle('bad',!ok);if(!ok)i.value=''}
+function submitItem(e,t){e.preventDefault();const f=e.target;let ok=true;f.querySelectorAll('.f').forEach(d=>{const x=d.querySelector('input,select,textarea');if(x&&x.type!=='file'){const b=!x.checkValidity();d.classList.toggle('bad',b);if(b)ok=false}});if(!ok)return toast('Fix the highlighted fields.',1);
+const d=Object.fromEntries(new FormData(f));S.items.push({id:S.nid++,type:t,name:d.name,cat:d.cat,desc:d.desc,loc:d.loc,date:d.date,status:'OPEN',owner:S.user.name,hide:d.hide||''});toast('Report submitted.');location.hash='dashboard'}
+function gate(){return `<div class="wrap"><section class="narrow">${empty('Log in to continue','You need an account to report items and manage claims.','<a class="btn p" href="#login">Log in</a>')}</section></div>`}
+function auth(reg){return `<div class="wrap"><section class="narrow" style="max-width:440px"><h2 style="margin-bottom:16px">${reg?'Create your account':'Welcome back'}</h2><form class="panel" novalidate onsubmit="doAuth(event,${reg})">
+${reg?'<div class="f"><label>Full name</label><input name="name" required><small>Enter your name.</small></div><div class="f"><label>Phone number</label><input name="phone" required pattern="[0-9+ ]{8,15}"><small>Enter a valid phone number.</small></div>':''}
+<div class="f"><label>Email</label><input type="email" name="email" required><small>Enter a valid email.</small></div>
+<div class="f"><label>Password</label><input type="password" name="pw" required minlength="8"><small>Use at least 8 characters.</small></div>
+<button class="btn p" style="width:100%">${reg?'Create account':'Log in'}</button><p class="meta" style="text-align:center">${reg?'Have an account? <a href="#login">Log in</a>':'New here? <a href="#register">Sign up</a>'}</p><p class="meta" style="text-align:center">Tip: use an email containing “admin” to see the admin panel.</p></form></section></div>`}
+function doAuth(e,reg){e.preventDefault();let ok=true;e.target.querySelectorAll('.f').forEach(d=>{const x=d.querySelector('input'),b=!x.checkValidity();d.classList.toggle('bad',b);if(b)ok=false});if(!ok)return;const d=Object.fromEntries(new FormData(e.target));S.user={name:d.name||d.email.split('@')[0],email:d.email,phone:d.phone||'',admin:/admin/i.test(d.email)};toast('Welcome, '+S.user.name+'.');location.hash='dashboard'}
+function logout(){S.user=null;toast('Logged out.');location.hash='home'}
+function dash(){if(!S.user)return gate();const me=S.user.name,mine=t=>S.items.filter(i=>i.owner===me&&i.type===t),T=S.tab;
+const myIds=S.items.filter(i=>i.owner===me).map(i=>i.id);const inc=S.claims.filter(c=>myIds.includes(c.item)),out=S.claims.filter(c=>c.by===me),rec=S.items.filter(i=>i.owner===me&&i.status==='RETURNED');
+const mm=matches().filter(m=>m.l.owner===me);
+const tabs=[['lost','My lost ('+mine('LOST').length+')'],['found','My found ('+mine('FOUND').length+')'],['matches','Matches ('+mm.length+')'],['incoming','Incoming claims ('+inc.length+')'],['outgoing','My claims ('+out.length+')'],['rec','Recovered ('+rec.length+')']];
+const list=a=>a.length?a.map(i=>`<div class="li"><div><b>${esc(i.name)}</b> <span class="tag st-${i.status}">${i.status.replace('_',' ')}</span><div class="meta">${esc(i.loc)} · ${i.date}</div></div><div><button class="btn o s" onclick="openItem(${i.id})">View</button> <button class="btn o s" onclick="editItem(${i.id})">Edit</button> <button class="btn d s" onclick="delItem(${i.id})">Delete</button></div></div>`).join(''):empty('Nothing here yet','Your reports will appear in this tab.','<a class="btn p" href="#report-lost">Report an item</a>');
+const body={lost:()=>list(mine('LOST')),found:()=>list(mine('FOUND')),
+matches:()=>mm.length?mm.map(m=>`<div class="li"><div><b>${esc(m.l.name)}</b> ↔ <b>${esc(m.f.name)}</b><div class="meta">${esc(m.f.loc)} · found ${m.f.date}</div></div><div style="display:flex;gap:10px;align-items:center"><div><span class="sc">${m.s}%</span><div class="bar"><i style="width:${m.s}%"></i></div></div><button class="btn p s" onclick="openItem(${m.f.id})">Review</button></div></div>`).join(''):empty('No potential matches','We’ll show likely matches here as new found items arrive.'),
+incoming:()=>inc.length?inc.map(c=>{const it=S.items.find(i=>i.id===c.item);return `<div class="li"><div><b>${esc(it.name)}</b><div class="meta">${esc(c.by)}: “${esc(c.proof)}”</div></div><div>${c.status==='PENDING'?`<button class="btn a s" onclick="decide(${c.id},true)">Approve</button> <button class="btn d s" onclick="decide(${c.id},false)">Reject</button>`:`<span class="tag st-${c.status==='APPROVED'?'RETURNED':'OPEN'}">${c.status}</span>`}</div></div>`}).join(''):empty('No incoming claims','When someone claims an item you found, you’ll review it here.'),
+outgoing:()=>out.length?out.map(c=>`<div class="li"><b>${esc(S.items.find(i=>i.id===c.item).name)}</b><span class="tag st-OPEN">${c.status}</span></div>`).join(''):empty('No claims yet','Open a found item and select Claim this item.'),
+rec:()=>list(rec)}[T]();
+return `<div class="wrap"><section><div class="row"><div><h2>Hi, ${esc(me)}</h2><p class="meta" style="margin:4px 0 0">${esc(S.user.email)}</p></div><div class="cta"><a class="btn p s" href="#report-lost">Report lost</a><a class="btn a s" href="#report-found">Report found</a></div></div>
+<div class="tabs" role="tablist">${tabs.map(t=>`<button class="${T===t[0]?'on':''}" onclick="S.tab='${t[0]}';render()">${t[1]}</button>`).join('')}</div><div class="panel">${body}</div></section></div>`}
+function decide(id,y){const c=S.claims.find(x=>x.id===id);c.status=y?'APPROVED':'REJECTED';const it=S.items.find(i=>i.id===c.item);it.status=y?'RETURNED':'OPEN';toast(y?'Claim approved. Item marked returned.':'Claim rejected.');render()}
+function delItem(id){if(!confirm('Delete this report?'))return;S.items=S.items.filter(i=>i.id!==id);toast('Report deleted.');render()}
+function editItem(id){const i=S.items.find(x=>x.id===id);const d=$('#dlg');d.innerHTML=`<form class="dl" onsubmit="event.preventDefault();saveEdit(${id},this)"><h3 style="margin-bottom:14px">Edit report</h3><div class="f"><label>Item name</label><input name="name" value="${esc(i.name)}" required></div><div class="f"><label>Location</label><input name="loc" value="${esc(i.loc)}" required></div><div class="f"><label>Description</label><textarea name="desc" rows="3" required>${esc(i.desc)}</textarea></div><button class="btn p">Save changes</button> <button type="button" class="btn o" onclick="$('#dlg').close()">Cancel</button></form>`;d.showModal()}
+function saveEdit(id,f){Object.assign(S.items.find(x=>x.id===id),Object.fromEntries(new FormData(f)));$('#dlg').close();toast('Changes saved.');render()}
+function openItem(id){const i=S.items.find(x=>x.id===id),f=i.type==='FOUND',own=S.user&&S.user.name===i.owner;const d=$('#dlg');
+d.innerHTML=`<div class="dl ${i.type.toLowerCase()}"><div class="ph" style="border-radius:14px;margin-bottom:14px">${ICON[i.cat]}</div><span class="tag t-${i.type.toLowerCase()}">${i.type}</span> <span class="tag st-${i.status}">${i.status.replace('_',' ')}</span><h2 style="margin:8px 0">${esc(i.name)}</h2>
+<p class="meta">${i.cat} · 📍 ${esc(i.loc)} · 🗓 ${i.date}</p><p>${f?'Identifying details are hidden to protect the owner. Describe them in your claim.':esc(i.desc)}</p>
+<p class="meta">Reported by ${esc(i.owner.split(' ')[0])}. Contact details stay private.</p>
+${f&&i.status==='OPEN'&&!own?`<form onsubmit="event.preventDefault();claim(${i.id},this)"><div class="f"><label>Prove it’s yours</label><textarea name="proof" rows="3" required minlength="10" placeholder="Describe marks, contents or serial numbers"></textarea></div><button class="btn p">Claim this item</button> </form>`:''}
+<button class="btn o" style="margin-top:8px" onclick="$('#dlg').close()">Close</button></div>`;d.showModal()}
+function claim(id,f){if(!S.user){$('#dlg').close();toast('Log in to claim an item.',1);location.hash='login';return}S.claims.push({id:S.claims.length+1,item:id,by:S.user.name,proof:f.proof.value,status:'PENDING'});S.items.find(i=>i.id===id).status='CLAIM_PENDING';$('#dlg').close();toast('Claim sent to the finder.');render()}
+function admin(){if(!S.user?.admin)return `<div class="wrap"><section class="narrow">${empty('Admins only','Your account doesn’t have access to this page.')}</section></div>`;
+const users=[...new Set(S.items.map(i=>i.owner))],T=S.atab;
+const st=[['Users',users.length],['Lost',S.items.filter(i=>i.type==='LOST').length],['Found',S.items.filter(i=>i.type==='FOUND').length],['Recovered',S.items.filter(i=>i.status==='RETURNED').length]];
+const tb={users:()=>`<table><tr><th>Name</th><th>Reports</th><th>Action</th></tr>${users.map(u=>`<tr><td>${esc(u)}</td><td>${S.items.filter(i=>i.owner===u).length}</td><td><button class="btn d s" onclick="toast('${esc(u)} suspended.')">Suspend</button></td></tr>`).join('')}</table>`,
+items:()=>`<table><tr><th>Item</th><th>Type</th><th>Status</th><th>Owner</th><th></th></tr>${S.items.map(i=>`<tr><td>${esc(i.name)}</td><td>${i.type}</td><td>${i.status}</td><td>${esc(i.owner)}</td><td><button class="btn d s" onclick="delItem(${i.id})">Remove</button></td></tr>`).join('')}</table>`,
+cats:()=>`<div class="tbl">${CATS.map(c=>`<div class="li"><span>${ICON[c]} ${c}</span><button class="btn d s" onclick="CATS.splice(CATS.indexOf('${c}'),1);render()">Remove</button></div>`).join('')}</div><form class="li" onsubmit="event.preventDefault();const v=this.c.value.trim();if(v){CATS.push(v);toast('Category added.');render()}"><input name="c" placeholder="New category" style="max-width:260px"><button class="btn p s">Add category</button></form>`}[T]();
+return `<div class="wrap"><section><h2 style="margin-bottom:16px">Admin dashboard</h2><div class="stats" style="margin-bottom:20px;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))">${st.map(s=>`<div><strong>${s[1]}</strong><span>${s[0]}</span></div>`).join('')}</div>
+<div class="tabs">${[['users','Users'],['items','Reports'],['cats','Categories']].map(t=>`<button class="${T===t[0]?'on':''}" onclick="S.atab='${t[0]}';render()">${t[1]}</button>`).join('')}</div><div class="panel tbl">${tb}</div></section></div>`}
+const R={home,browse,'report-lost':()=>report('LOST'),'report-found':()=>report('FOUND'),login:()=>auth(0),register:()=>auth(1),dashboard:dash,admin};
+function render(){const r=location.hash.slice(1)||'home';nav();$('#app').innerHTML=(R[r]||home)()}
+let first=true;
+addEventListener('hashchange',()=>{scrollTo(0,0);render()});
+$('#app').innerHTML='<div class="wrap"><section><div class="grid"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></section></div>';
+setTimeout(render,350);
+</script>
+</body>
+</html>

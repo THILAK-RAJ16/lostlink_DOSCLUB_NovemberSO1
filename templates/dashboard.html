@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – LostLink{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                {% if user.get('profile_picture') %}
+                    <img src="{{ user['profile_picture'] }}" class="rounded-circle border" width="60" height="60" alt="Avatar">
+                {% else %}
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 60px; height: 60px;">
+                        {{ user.get('name', 'U')[0] }}
+                    </div>
+                {% endif %}
+                <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <h4 class="fw-bold mb-0">{{ user.get('name') }}</h4>
+                        {% if user.get('auth_provider') == 'google' %}
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">Google Account</span>
+                        {% elif user.get('auth_provider') == 'google_linked' %}
+                            <span class="badge bg-info-subtle text-info border border-info-subtle">Google Linked</span>
+                        {% endif %}
+                        {% if user.get('email_verified') %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">Verified</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-muted small mb-0">{{ user.get('email') }} {% if user.get('phone') %}· {{ user.get('phone') }}{% endif %}</p>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/report-lost" class="btn btn-primary btn-sm px-3">+ Report Lost</a>
+                <a href="/report-found" class="btn btn-success btn-sm px-3">+ Report Found</a>
+                <a href="/profile" class="btn btn-outline-secondary btn-sm px-3">Profile Settings</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="text-muted small">My Lost Reports</div>
+                <h3 class="fw-bold mb-0 text-primary">{{ lost_items|length if lost_items else 0 }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="text-muted small">My Found Reports</div>
+                <h3 class="fw-bold mb-0 text-success">{{ found_items|length if found_items else 0 }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="text-muted small">Potential Matches</div>
+                <h3 class="fw-bold mb-0 text-warning">{{ matches|length if matches else 0 }}</h3>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div class="text-muted small">Items Recovered</div>
+                <h3 class="fw-bold mb-0 text-info">{{ recovered|length if recovered else 0 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

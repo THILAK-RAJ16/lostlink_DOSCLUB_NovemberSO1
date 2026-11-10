@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>LostLink – Google Verification</title>
+<style>body{font-family:system-ui,sans-serif;display:grid;place-items:center;height:100vh;margin:0;background:#F8FAFC;color:#0F172A;text-align:center}
+.box{padding:32px;background:#fff;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.06);max-width:380px}#msg{color:#64748B;font-size:14px}</style></head>
+<body><div class="box"><h3>Connecting Google Account</h3><p id="msg">Completing secure authentication…</p></div>
+<script>
+  const p = {{ payload|tojson }};
+  const fail = (m) => { document.getElementById('msg').textContent = m; setTimeout(() => location.replace('/auth/login'), 2500); };
+  if (window.opener && !window.opener.closed) {
+    // Popup flow used by the React auth modal: it verifies the code via /api/auth/google/verify.
+    window.opener.postMessage({ type: 'GOOGLE_AUTH_CALLBACK', code: p.code, state: p.state, error: p.error }, location.origin);
+    setTimeout(() => window.close(), 600);
+  } else if (p.error || !p.code) {
+    fail('Google sign-in failed (' + (p.error || 'no code') + ').');
+  } else {
+    // Full-page flow (e.g. the "Continue with Google" link on /auth/login).
+    fetch('/api/auth/google/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: p.code }) })
+      .then(r => r.json().then(d => ({ ok: r.ok, d })))
+      .then(({ ok, d }) => {
+        if (!ok || !d.token) return fail(d.error || 'Google sign-in failed.');
+        try { localStorage.setItem('lostlink_auth_token', d.token); localStorage.setItem('lostlink_auth_user', JSON.stringify(d.user)); } catch (e) {}
+        location.replace('/#dashboard');
+      }).catch(() => fail('Network error while signing in.'));
+  }
+</script></body></html>

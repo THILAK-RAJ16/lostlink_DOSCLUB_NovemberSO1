@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: lostlink
+    runtime: docker
+    plan: starter            # persistent disks need a paid plan; free tier loses the SQLite file on redeploy
+    healthCheckPath: /api/health
+    disk:
+      name: lostlink-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: LOSTLINK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /data/lostlink.db
+      - key: UPLOAD_FOLDER
+        value: /data/uploads
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI     # https://YOUR-APP.onrender.com/auth/google/callback
+        sync: false
